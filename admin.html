@@ -684,3 +684,54 @@
     </script>
 </body>
 </html>
+                return;
+            }
+            
+            // Check if session expired (24 hours)
+            const sessionDuration = 24 * 60 * 60 * 1000; // 24 hours
+            if (Date.now() - parseInt(loginTime) > sessionDuration) {
+                localStorage.removeItem('adminLoggedIn');
+                localStorage.removeItem('adminLoginTime');
+                window.location.href = 'admin-login.html';
+                return;
+            }
+            
+            // Create demo account if it doesn't exist (but don't overwrite existing data)
+            const users = JSON.parse(localStorage.getItem('gameUsers')) || {};
+            if (Object.keys(users).length === 0) {
+                createCompleteDemoData();
+            }
+            
+            // Initialize admin panel
+            adminPanel = new AdminPanel();
+            
+            // Add logout button
+            addAdminLogoutButton();
+        });
+        
+        // Add logout button to admin panel
+        function addAdminLogoutButton() {
+            const header = document.querySelector('.header');
+            if (header) {
+                const logoutBtn = document.createElement('button');
+                logoutBtn.innerHTML = '🚪 Admin Logout';
+                logoutBtn.style.cssText = `
+                    position: absolute;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(45deg, #E74C3C, #C0392B);
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-weight: bold;
+                    transition: all 0.3s ease;
+                `;
+                logoutBtn.onclick = adminLogout;
+                header.appendChild(logoutBtn);
+            }
+        }
+    </script>
+</body>
+</html>
