@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎡 Spin The Wheel - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo p {
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+
+        .login-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(45deg, #4ECDC4, #44A08D);
+            box-shadow: 0 2px 10px rgba(78,205,196,0.4);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4ECDC4;
+            box-shadow: 0 0 10px rgba(78,205,196,0.3);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #4ECDC4, #44A08D);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(78,205,196,0.4);
+        }
+
+        .register-section {
+            display: none;
+        }
+
+        .register-section.active {
+            display: block;
+        }
+
+        .login-section.active {
+            display: block;
+        }
+
+        .login-section {
+            display: none;
+        }
+
+        .welcome-bonus {
+            background: rgba(39,174,96,0.2);
+            border: 1px solid rgba(39,174,96,0.5);
+            color: #2ecc71;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .welcome-bonus h4 {
+            margin-bottom: 8px;
+            color: #FFD700;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .forgot-password a {
+            color: #FFD700;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: rgba(231,76,60,0.2);
+            border: 1px solid rgba(231,76,60,0.5);
+            color: #ff6b6b;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message {
+            background: rgba(39,174,96,0.2);
+            border: 1px solid rgba(39,174,96,0.5);
+            color: #2ecc71;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+            
+            .logo h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1>🎡 Spin The Wheel</h1>
+            <p>Login to start winning!</p>
+        </div>
+
+        <div class="login-tabs">
+            <button class="tab-btn active" onclick="showLogin()">Login</button>
+            <button class="tab-btn" onclick="showRegister()">Register</button>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+
+        <!-- Login Form -->
+        <div class="login-section active" id="loginSection">
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Username or Email</label>
+                    <input type="text" id="loginUsername" placeholder="Enter your username or email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="login-btn">🎯 Login & Play</button>
+            </form>
+            <div class="forgot-password">
+                <a href="#" onclick="forgotPassword()">Forgot Password?</a>
+            </div>
+        </div>
+
+        <!-- Register Form -->
+        <div class="register-section" id="registerSection">
+            <form onsubmit="handleRegister(event)" id="registerForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="registerUsername" placeholder="Choose a username" required minlength="3">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="registerEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="registerPhone" placeholder="Enter your phone number" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="registerPassword" placeholder="Create a password" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                </div>
+                <button type="submit" class="login-btn" id="registerBtn">🎉 Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Login System JavaScript
+        class LoginSystem {
+            constructor() {
+                this.users = this.loadUsers();
+                this.currentUser = this.getCurrentUser();
+            }
+
+            loadUsers() {
+                return JSON.parse(localStorage.getItem('gameUsers')) || {};
+            }
+
+            saveUsers() {
+                localStorage.setItem('gameUsers', JSON.stringify(this.users));
+            }
+
+            getCurrentUser() {
+                return localStorage.getItem('currentGameUser');
+            }
+
+            setCurrentUser(username) {
+                localStorage.setItem('currentGameUser', username);
+            }
+
+            register(username, email, phone, password) {
+                // Check if user already exists
+                if (this.users[username]) {
+                    return { success: false, message: 'Username already exists!' };
+                }
+
+                // Check if email already exists
+                for (let user in this.users) {
+                    if (this.users[user].email === email) {
+                        return { success: false, message: 'Email already registered!' };
+                    }
+                }
+
+                // Check if phone already exists
+                for (let user in this.users) {
+                    if (this.users[user].phone === phone) {
+                        return { success: false, message: 'Phone number already registered!' };
+                    }
+                }
+
+                // Create new user with zero balance
+                this.users[username] = {
+                    email: email,
+                    phone: phone,
+                    password: password, // In real app, this should be hashed
+                    balance: 0.00, // No welcome bonus
+                    createdAt: new Date().toISOString(),
+                    totalSpins: 0,
+                    totalDeposits: 0,
+                    isActive: true,
+                    isVerified: true,
+                    welcomeBonusGiven: false
+                };
+
+                this.saveUsers();
+                
+                return { 
+                    success: true, 
+                    message: 'Account created successfully! Add funds to start playing.'
+                };
+            }
+
+            login(usernameOrEmail, password) {
+                // Find user by username or email
+                let foundUser = null;
+                let foundUsername = null;
+
+                for (let username in this.users) {
+                    const user = this.users[username];
+                    if (username === usernameOrEmail || user.email === usernameOrEmail) {
+                        if (user.password === password) {
+                            foundUser = user;
+                            foundUsername = username;
+                            break;
+                        }
+                    }
+                }
+
+                if (foundUser) {
+                    this.setCurrentUser(foundUsername);
+                    return { success: true, message: 'Login successful!', user: foundUser };
+                } else {
+                    return { success: false, message: 'Invalid username/email or password!' };
+                }
+            }
+
+            logout() {
+                localStorage.removeItem('currentGameUser');
+            }
+        }
+
+        // Initialize login system
+        const loginSystem = new LoginSystem();
+
+        // Tab switching
+        function showLogin() {
+            document.getElementById('loginSection').classList.add('active');
+            document.getElementById('registerSection').classList.remove('active');
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            document.querySelectorAll('.tab-btn')[1].classList.remove('active');
+            hideMessages();
+        }
+
+        function showRegister() {
+            document.getElementById('loginSection').classList.remove('active');
+            document.getElementById('registerSection').classList.add('active');
+            document.querySelectorAll('.tab-btn')[0].classList.remove('active');
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            hideMessages();
+        }
+
+        // Message functions
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function hideMessages() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        // Handle login
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const result = loginSystem.login(username, password);
+
+            if (result.success) {
+                showSuccess(result.message);
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            } else {
+                showError(result.message);
+            }
+        }
+
+        // Handle registration
+        function handleRegister(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const phone = document.getElementById('registerPhone').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Validate passwords match
+            if (password !== confirmPassword) {
+                showError('Passwords do not match!');
+                return;
+            }
+
+            // Validate username
+            if (username.length < 3) {
+                showError('Username must be at least 3 characters long!');
+                return;
+            }
+
+            // Validate password
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters long!');
+                return;
+            }
+
+            const result = loginSystem.register(username, email, phone, password);
+
+            if (result.success) {
+                showSuccess(result.message);
+                
+                setTimeout(() => {
+                    showLogin();
+                    // Clear form
+                    document.getElementById('registerForm').reset();
+                }, 2000);
+            } else {
+                showError(result.message);
+            }
+        }
+
+        // Forgot password
+        function forgotPassword() {
+            alert('Please contact admin to reset your password.');
+        }
+
+        // Check if user is already logged in
+        window.addEventListener('load', () => {
+            const currentUser = loginSystem.getCurrentUser();
+            if (currentUser) {
+                // User is already logged in, redirect to game
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎡 Ultimate Spin The Wheel - Win Real Money!</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎡 Ultimate Spin The Wheel</h1>
+            <div class="wallet-info">
+                <div class="balance">
+                    <span>💰 Balance: ₹<span id="balance">0.00</span></span>
+                </div>
+                <div class="spin-cost">
+                    <span>🎯 Spin Cost: ₹<span id="spinCost">10.00</span></span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Wheel Section -->
+            <div class="wheel-section">
+                <div class="wheel-container">
+                    <div class="pointer"></div>
+                    <canvas id="wheelCanvas" width="400" height="400"></canvas>
+                </div>
+                
+                <div class="controls">
+                    <button id="spinBtn" class="spin-btn" onclick="spinWheel()">
+                        🎯 SPIN TO WIN!
+                    </button>
+                    <button class="deposit-btn" onclick="showDepositModal()">
+                        💳 Add Funds
+                    </button>
+                    <button class="withdraw-btn" onclick="showWithdrawModal()">
+                        💸 Withdraw
+                    </button>
+                </div>
+
+                <div id="result" class="result-display">
+                    Welcome! Add funds to start spinning and winning!
+                </div>
+            </div>
+
+            <!-- Game Stats -->
+            <div class="stats-section">
+                <div class="stat-item">
+                    <span class="stat-label">Total Spins:</span>
+                    <span id="totalSpins">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Won:</span>
+                    <span id="totalWon">₹0.00</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Biggest Win:</span>
+                    <span id="biggestWin">₹0.00</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Deposit Modal -->
+        <div id="depositModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="hideDepositModal()">&times;</span>
+                <h2>💳 Add Funds to Your Account</h2>
+                
+                <div class="payment-methods">
+                    <h3>Choose Payment Method:</h3>
+                    <div class="payment-options">
+                        <button class="payment-btn" onclick="selectPayment('upi')">
+                            📱 UPI ID
+                        </button>
+                        <button class="payment-btn" onclick="selectPayment('qr')">
+                            📷 QR Code
+                        </button>
+                    </div>
+                </div>
+
+                <div class="deposit-amounts">
+                    <h3>Select Amount:</h3>
+                    <div class="amount-buttons">
+                        <button class="amount-btn" onclick="selectAmount(100)">₹100</button>
+                        <button class="amount-btn" onclick="selectAmount(250)">₹250</button>
+                        <button class="amount-btn" onclick="selectAmount(500)">₹500</button>
+                        <button class="amount-btn" onclick="selectAmount(1000)">₹1000</button>
+                        <button class="amount-btn" onclick="selectAmount(2500)">₹2500</button>
+                        <button class="amount-btn" onclick="selectAmount(5000)">₹5000</button>
+                    </div>
+                    
+                    <div class="custom-amount">
+                        <input type="number" id="customAmount" placeholder="Enter custom amount" min="10" step="0.01">
+                    </div>
+                </div>
+
+                <div id="paymentForm" class="payment-form" style="display: none;">
+                    <h3 id="paymentTitle">Payment Details</h3>
+                    <div id="paymentFields"></div>
+                    <button id="processPayment" class="process-btn" onclick="processDeposit()">
+                        Process Payment
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Withdraw Modal -->
+        <div id="withdrawModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="hideWithdrawModal()">&times;</span>
+                <h2>💸 Withdraw Your Winnings</h2>
+                
+                <div class="withdraw-info">
+                    <p>Available Balance: ₹<span id="withdrawBalance">0.00</span></p>
+                    <p>Minimum Withdrawal: ₹200.00</p>
+                </div>
+
+                <div class="withdraw-form">
+                    <input type="number" id="withdrawAmount" placeholder="Enter withdrawal amount" min="20" step="0.01">
+                    
+                    <select id="withdrawMethod">
+                        <option value="">Select withdrawal method</option>
+                        <option value="bank">Bank Transfer</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="crypto">Cryptocurrency</option>
+                    </select>
+
+                    <div id="withdrawDetails" style="display: none;">
+                        <input type="text" id="accountDetails" placeholder="Account details">
+                    </div>
+
+                    <button id="processWithdraw" class="process-btn" onclick="processWithdrawal()">
+                        Request Withdrawal
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <p>Processing...</p>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="spinSound" preload="auto">
+        <source src="spin.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="winSound" preload="auto">
+        <source src="win.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+

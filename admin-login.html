@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 Admin Login - Spin The Wheel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .admin-login-container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .admin-logo {
+            margin-bottom: 30px;
+        }
+
+        .admin-logo h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #FFD700;
+        }
+
+        .admin-logo p {
+            opacity: 0.8;
+            font-size: 1.1rem;
+            color: #E74C3C;
+            font-weight: bold;
+        }
+
+        .security-notice {
+            background: rgba(231,76,60,0.2);
+            border: 1px solid rgba(231,76,60,0.5);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #E74C3C;
+            box-shadow: 0 0 10px rgba(231,76,60,0.3);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .admin-login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #E74C3C, #C0392B);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .admin-login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231,76,60,0.4);
+        }
+
+        .error-message {
+            background: rgba(231,76,60,0.2);
+            border: 1px solid rgba(231,76,60,0.5);
+            color: #ff6b6b;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message {
+            background: rgba(39,174,96,0.2);
+            border: 1px solid rgba(39,174,96,0.5);
+            color: #2ecc71;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .back-link {
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: #FFD700;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .attempts-warning {
+            background: rgba(243,156,18,0.2);
+            border: 1px solid rgba(243,156,18,0.5);
+            color: #f39c12;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-login-container">
+        <div class="admin-logo">
+            <h1>🔐 Admin Panel</h1>
+            <p>Authorized Access Only</p>
+        </div>
+
+        <div class="security-notice">
+            ⚠️ This is a restricted area. Only authorized administrators are allowed to access this panel.
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+        <div class="attempts-warning" id="attemptsWarning"></div>
+
+        <form onsubmit="handleAdminLogin(event)">
+            <div class="form-group">
+                <label>Admin Username</label>
+                <input type="text" id="adminUsername" placeholder="Enter admin username" required>
+            </div>
+            <div class="form-group">
+                <label>Admin Password</label>
+                <input type="password" id="adminPassword" placeholder="Enter admin password" required>
+            </div>
+            <button type="submit" class="admin-login-btn">🔓 Access Admin Panel</button>
+        </form>
+
+        <div class="back-link">
+            <a href="login.html">← Back to User Login</a>
+        </div>
+    </div>
+
+    <script>
+        // Admin Login System
+        class AdminLoginSystem {
+            constructor() {
+                // Default admin credentials (change these!)
+                this.adminCredentials = {
+                    username: 'admin',
+                    password: 'admin123'
+                };
+                this.maxAttempts = 3;
+                this.lockoutTime = 300000; // 5 minutes in milliseconds
+                this.attempts = this.getAttempts();
+            }
+
+            getAttempts() {
+                const stored = localStorage.getItem('adminLoginAttempts');
+                if (stored) {
+                    const data = JSON.parse(stored);
+                    // Check if lockout period has expired
+                    if (data.lockedUntil && Date.now() > data.lockedUntil) {
+                        this.clearAttempts();
+                        return { count: 0, lockedUntil: null };
+                    }
+                    return data;
+                }
+                return { count: 0, lockedUntil: null };
+            }
+
+            saveAttempts() {
+                localStorage.setItem('adminLoginAttempts', JSON.stringify(this.attempts));
+            }
+
+            clearAttempts() {
+                localStorage.removeItem('adminLoginAttempts');
+                this.attempts = { count: 0, lockedUntil: null };
+            }
+
+            isLocked() {
+                return this.attempts.lockedUntil && Date.now() < this.attempts.lockedUntil;
+            }
+
+            login(username, password) {
+                // Check if account is locked
+                if (this.isLocked()) {
+                    const remainingTime = Math.ceil((this.attempts.lockedUntil - Date.now()) / 60000);
+                    return { 
+                        success: false, 
+                        message: `Account locked. Try again in ${remainingTime} minutes.`,
+                        locked: true
+                    };
+                }
+
+                // Check credentials
+                if (username === this.adminCredentials.username && password === this.adminCredentials.password) {
+                    // Successful login
+                    this.clearAttempts();
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    localStorage.setItem('adminLoginTime', Date.now().toString());
+                    return { success: true, message: 'Admin login successful!' };
+                } else {
+                    // Failed login
+                    this.attempts.count++;
+                    
+                    if (this.attempts.count >= this.maxAttempts) {
+                        // Lock account
+                        this.attempts.lockedUntil = Date.now() + this.lockoutTime;
+                        this.saveAttempts();
+                        return { 
+                            success: false, 
+                            message: `Too many failed attempts. Account locked for 5 minutes.`,
+                            locked: true
+                        };
+                    } else {
+                        this.saveAttempts();
+                        const remaining = this.maxAttempts - this.attempts.count;
+                        return { 
+                            success: false, 
+                            message: `Invalid credentials. ${remaining} attempts remaining.`,
+                            attemptsRemaining: remaining
+                        };
+                    }
+                }
+            }
+
+            logout() {
+                localStorage.removeItem('adminLoggedIn');
+                localStorage.removeItem('adminLoginTime');
+            }
+
+            isLoggedIn() {
+                const loggedIn = localStorage.getItem('adminLoggedIn');
+                const loginTime = localStorage.getItem('adminLoginTime');
+                
+                if (!loggedIn || !loginTime) return false;
+                
+                // Check if session expired (24 hours)
+                const sessionDuration = 24 * 60 * 60 * 1000; // 24 hours
+                if (Date.now() - parseInt(loginTime) > sessionDuration) {
+                    this.logout();
+                    return false;
+                }
+                
+                return true;
+            }
+        }
+
+        // Initialize admin login system
+        const adminLogin = new AdminLoginSystem();
+
+        // Message functions
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('attemptsWarning').style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('attemptsWarning').style.display = 'none';
+        }
+
+        function showWarning(message) {
+            const warningDiv = document.getElementById('attemptsWarning');
+            warningDiv.textContent = message;
+            warningDiv.style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        function hideMessages() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('attemptsWarning').style.display = 'none';
+        }
+
+        // Handle admin login
+        function handleAdminLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+
+            const result = adminLogin.login(username, password);
+
+            if (result.success) {
+                showSuccess(result.message);
+                setTimeout(() => {
+                    window.location.href = 'admin.html';
+                }, 1500);
+            } else {
+                if (result.locked) {
+                    showError(result.message);
+                } else if (result.attemptsRemaining) {
+                    showWarning(result.message);
+                } else {
+                    showError(result.message);
+                }
+            }
+        }
+
+        // Check if admin is already logged in
+        window.addEventListener('load', () => {
+            if (adminLogin.isLoggedIn()) {
+                window.location.href = 'admin.html';
+            }
+            
+            // Show lockout status if locked
+            if (adminLogin.isLocked()) {
+                const remainingTime = Math.ceil((adminLogin.attempts.lockedUntil - Date.now()) / 60000);
+                showError(`Account is locked. Try again in ${remainingTime} minutes.`);
+            }
+        });
+    </script>
+</body>
+</html>
