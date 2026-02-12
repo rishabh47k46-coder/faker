@@ -299,18 +299,18 @@ class PaymentSystem {
                 fields = `
                     <div class="form-group">
                         <label>UPI ID to Pay</label>
-                        <input type="text" id="upiId" value="wpay123@upi" readonly style="background: #f0f0f0; color: #333; font-weight: bold; text-align: center;">
+                        <input type="text" id="upiId" value="9326195985@ibl" readonly style="background: #f0f0f0; color: #333; font-weight: bold; text-align: center;">
                     </div>
                     <div class="form-group">
                         <label>Amount to Pay</label>
                         <input type="text" id="upiAmount" placeholder="Select amount first" readonly>
                     </div>
                     <div class="upi-info">
-                        <p><strong>Pay to:</strong> wpay123@upi</p>
+                        <p><strong>Pay to:</strong> 9326195985@ibl</p>
                         <p><strong>Instructions:</strong></p>
                         <ol>
                             <li>Open your UPI app (Paytm, GPay, PhonePe, etc.)</li>
-                            <li>Send money to: <strong>wpay123@upi</strong></li>
+                            <li>Send money to: <strong>9326195985@ibl</strong></li>
                             <li>Enter the amount shown above</li>
                             <li>Complete the payment</li>
                             <li>Click confirm below</li>
@@ -328,13 +328,13 @@ class PaymentSystem {
                         </div>
                         <div class="qr-info">
                             <p><strong>Amount to Pay:</strong> ₹<span id="qrAmount">0</span></p>
-                            <p><strong>UPI ID:</strong> wpay123@upi</p>
+                            <p><strong>UPI ID:</strong> 9326195985@ibl</p>
                             <p><strong>Instructions:</strong></p>
                             <ol style="text-align: left; max-width: 300px; margin: 0 auto;">
                                 <li>Open any UPI app on your phone</li>
                                 <li>Scan the QR code above</li>
                                 <li>Verify the amount matches: ₹<span class="qr-amount-check">0</span></li>
-                                <li>Complete the payment to wpay123@upi</li>
+                                <li>Complete the payment to 9326195985@ibl</li>
                                 <li>Click "Payment Done" below</li>
                             </ol>
                         </div>
@@ -424,7 +424,7 @@ class PaymentSystem {
             userId: this.generateUserId(),
             amount: amount,
             method: this.selectedPayment === 'upi' ? 'UPI ID' : 'QR Code',
-            upiId: this.selectedPayment === 'upi' ? document.getElementById('upiId')?.value : 'wpay123@upi',
+            upiId: this.selectedPayment === 'upi' ? document.getElementById('upiId')?.value : '9326195985@ibl',
             transactionId: document.getElementById('transactionId')?.value || null,
             timestamp: new Date().toISOString(),
             status: 'pending'
@@ -813,14 +813,14 @@ function selectPayment(method) {
             const upiElements = document.querySelectorAll('strong');
             upiElements.forEach(el => {
                 if (el.textContent.includes('spinwheel@paytm')) {
-                    el.textContent = 'wpay123@upi';
+                    el.textContent = '9326195985@ibl';
                 }
             });
             
             // Update UPI ID input field
             const upiInput = document.getElementById('upiId');
             if (upiInput) {
-                upiInput.value = 'wpay123@upi';
+                upiInput.value = '9326195985@ibl';
                 upiInput.style.background = '#f0f0f0';
                 upiInput.style.color = '#333';
                 upiInput.style.fontWeight = 'bold';

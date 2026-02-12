@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Deposit Money</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .box {
+      background: white;
+      padding: 30px;
+      width: 400px;
+      margin: auto;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    input {
+      width: 80%;
+      padding: 12px;
+      font-size: 16px;
+      margin-top: 15px;
+      border-radius: 8px;
+      border: 1px solid gray;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      background: green;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: darkgreen;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+
+    #qrSection {
+      display: none;
+      margin-top: 25px;
+    }
+
+    img {
+      margin-top: 15px;
+      width: 250px;
+      border: 2px solid black;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="box">
+    <h2>Deposit Money</h2>
+
+    <p><b>Minimum Deposit:</b> ₹100</p>
+    <p><b>Maximum Deposit:</b> ₹1000</p>
+
+    <!-- Amount Input -->
+    <input type="number" id="amount" placeholder="Enter amount (100 - 1000)">
+
+    <br>
+    <button onclick="showQR()">OK Deposit</button>
+
+    <!-- Error Message -->
+    <p class="error" id="errorMsg"></p>
+
+    <!-- QR Section -->
+    <div id="qrSection">
+      <h3>Scan This QR to Pay</h3>
+
+      <p>Deposit Amount: ₹<span id="showAmount"></span></p>
+
+      <!-- ✅ Your Sample QR Code Added -->
+      <img src="OIP.jpeg" alt="Deposit QR Code">
+
+      <p>After payment, please contact support.</p>
+    </div>
+  </div>
+
+  <script>
+    function showQR() {
+      let amount = document.getElementById("amount").value;
+      let errorMsg = document.getElementById("errorMsg");
+      let qrSection = document.getElementById("qrSection");
+
+      // Reset
+      errorMsg.innerText = "";
+      qrSection.style.display = "none";
+
+      // Validation
+      if (amount < 100) {
+        errorMsg.innerText = "❌ Minimum deposit is ₹100.";
+        return;
+      }
+
+      if (amount > 1000) {
+        errorMsg.innerText = "❌ Maximum deposit is ₹1000.";
+        return;
+      }
+
+      // Show Amount + QR
+      document.getElementById("showAmount").innerText = amount;
+      qrSection.style.display = "block";
+    }
+  </script>
+
+</body>
+</html>
